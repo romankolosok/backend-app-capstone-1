@@ -87,7 +87,21 @@ seriesRouter.put('/:seriesId', checkValidSeries, (req, res, next) => {
 })
 
 seriesRouter.delete('/:seriesId', (req, res, next) => {
-
+    db.get(`SELECT * FROM Issue WHERE series_id = ${req.params.seriesId}`, (err, issue) => {
+        if(err) {
+            next(err)
+        } else if(issue) {
+            res.sendStatus(400)
+        } else {
+            db.run(`DELETE FROM Series WHERE id = ${req.params.seriesId}`, function (err) {
+                if(err) {
+                    next(err)
+                } else {
+                    res.sendStatus(204)
+                }
+            })
+        }
+    })
 })
 
 module.exports = seriesRouter;
