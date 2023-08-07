@@ -1,9 +1,11 @@
 const express = require('express')
 const sqlite3 = require('sqlite3')
+const issuesRouter = require('./issues')
 
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite')
 
 const seriesRouter = express.Router()
+seriesRouter.use('/:seriesId/issues', issuesRouter)
 
 const checkValidSeries = (req, res, next) => {
     const series = req.body.series
